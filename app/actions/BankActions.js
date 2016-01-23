@@ -1,7 +1,7 @@
 /**
  * Ce fichier contient les actions que l'utilisateur
  * peut effectuer dans l'application.
- * En l'occurence ici on est sur les features d'account. 
+ * En l'occurence ici on est sur les features d'account.
  */
 import AppDispatcher from '../dispatchers/AppDispatcher';
 import bankConstants from '../constants/constants';
@@ -21,23 +21,23 @@ const BankActions = {
 
   /**
    * Amount add in the account.
-   * @param amount
+   * @param ammount
    */
-  depositIntoAccount(amount) {
+  depositIntoAccount(ammount) {
     AppDispatcher.dispatch({
       type: bankConstants.DEPOSITED_INTO_ACCOUNT,
-      amount
+      ammount
     });
   },
 
   /**
    * Amount to withdraw from the account
-   * @param amount
+   * @param ammount
    */
-  withdrawFromAccount(amount) {
+  withdrawFromAccount(ammount) {
     AppDispatcher.dispatch({
       type: bankConstants.WITHDREW_FROM_ACCOUNT,
-      amount
+      ammount
     });
   }
 };
