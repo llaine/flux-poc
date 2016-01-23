@@ -1,3 +1,8 @@
+/**
+ * Ce fichier contient les actions que l'utilisateur
+ * peut effectuer dans l'application.
+ * En l'occurence ici on est sur les features d'account. 
+ */
 import AppDispatcher from '../dispatchers/AppDispatcher';
 import bankConstants from '../constants/constants';
 
