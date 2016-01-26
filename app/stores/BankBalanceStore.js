@@ -7,50 +7,42 @@
  * d'insérer des données directement. On peut juste, récupère l'état global avec getter.
  */
 
-import { EventEmitter } from 'fbemitter';
 import AppDispatcher from '../dispatchers/AppDispatcher';
 import bankConstants from '../constants/constants';
 
-const CHANGE_EVENT = 'change';
-const _emitter = new EventEmitter();
+import {ReduceStore} from 'flux/utils';
 
-let balance = 0;
-
-const BankBalanceStore = {
+class BankBalanceStore extends ReduceStore {
   /**
-   * Retourne l'état courant du store.
+   * L'état initial de l'application
    * @returns {number}
    */
-  getState() {
-    return balance;
-  },
-
-  addListener(callback) {
-    return _emitter.addListener(CHANGE_EVENT, callback);
+  getInitialState() {
+    return 0;
   }
-};
 
-/**
- * Petite fonction pour éviter le boilerplate.
- */
-const emitChange = () => _emitter.emit(CHANGE_EVENT);
-
-// Le dispatcher de notre application.
-BankBalanceStore.dispatchToken = AppDispatcher.register((action) => {
-  switch (action.type) {
-    case bankConstants.CREATED_ACCOUNT:
-      balance = 0;
-      emitChange();
-      break;
-    case bankConstants.DEPOSITED_INTO_ACCOUNT:
-      balance = balance + action.ammount;
-      emitChange();
-      break;
-    case bankConstants.WITHDREW_FROM_ACCOUNT:
-      balance = balance - action.ammount;
-      emitChange();
-      break;
+  /**
+   * La fonction reduce, qui
+   * @param state
+   * @param action
+   * @returns {*}
+   */
+  reduce(state, action) {
+    switch (action.type) {
+      case bankConstants.CREATED_ACCOUNT:
+        return 0;
+        break;
+      case bankConstants.DEPOSITED_INTO_ACCOUNT:
+        return state + action.ammount;
+        break;
+      case bankConstants.WITHDREW_FROM_ACCOUNT:
+        return state - action.ammount;
+        break;
+      default:
+        return state;
+    }
   }
-});
+}
 
-export default BankBalanceStore;
+
+export default new BankBalanceStore(AppDispatcher);
