@@ -21,3 +21,5 @@ class TicketStore extends ReduceStore {
     }
   }
 }
+
+export default new TicketStore(AppDispatcher);
