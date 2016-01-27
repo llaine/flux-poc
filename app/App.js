@@ -4,12 +4,24 @@ import { Container } from 'flux/utils';
 
 import Autosuggest from 'react-autosuggest';
 import AirportStore from './stores/AirportStore';
+import RouteStore from './stores/RouteStore';
+import TicketStore from './stores/TicketStore';
+
 import AirportActionCreators from './actions/AirportActionCreators';
 
 
 class App extends Component {
   componentDidMount() {
     AirportActionCreators.fetchAirports();
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    const originDestinationSelected = nextState.origin && nextState.destination;
+    const selectionHasChangesSinceLastUpdate = nextState.origin !== this.state.origin ||
+                                               nextState.destination !== this.state.destination;
+    if(originDestinationSelected && selectionHasChangesSinceLastUpdate) {
+      AirportActionCreators.fetchTickets(nextState.origin, nextState.destination);
+    }
   }
 
   /**
@@ -38,6 +50,13 @@ class App extends Component {
     callback(null, suggestions);
   }
 
+  handleSelect(target, suggestion, event) {
+    const airportCodeRegex = /\(([^)]+)\)/;
+    const airportCode = airportCodeRegex.exec(suggestion)[1];
+    AirportActionCreators.chooseAiport(target, airportCode);
+
+  }
+
   render() {
     return (
         <div>
@@ -48,10 +67,12 @@ class App extends Component {
             </div>
             <div className="header-route">
               <Autosuggest id='origin'
+                           onSuggestionSelected={this.handleSelect.bind(this, 'origin')}
                            suggestions={this.getSuggestions.bind(this)}
                            inputAttributes={{placeholder:'From'}} />
 
               <Autosuggest id='destination'
+                           onSuggestionSelected={this.handleSelect.bind(this, 'destination')}
                            suggestions={this.getSuggestions.bind(this)}
                            inputAttributes={{placeholder:'To'}} />
             </div>
@@ -61,10 +82,13 @@ class App extends Component {
   }
 }
 
-App.getStores = () => ([AirportStore]);
+App.getStores = () => ([AirportStore, RouteStore, TicketStore ]);
 // Les props sont passés de cette manière au composant en fonction de l'état du store.
 App.calculateState = (prevState) => ({
-  airports: AirportStore.getState()
+  airports: AirportStore.getState(),
+  origin: RouteStore.get('origin'),
+  destination: RouteStore.get('destination'),
+  tickets: TicketStore.getState()
 });
 
 const AppContainer = Container.create(App);
