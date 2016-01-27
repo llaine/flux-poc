@@ -9,6 +9,7 @@ import TicketStore from './stores/TicketStore';
 
 import AirportActionCreators from './actions/AirportActionCreators';
 
+import TicketItem from './components/ticket-item.jsx';
 
 class App extends Component {
   componentDidMount() {
@@ -58,6 +59,10 @@ class App extends Component {
   }
 
   render() {
+    const ticketList = this.state.tickets.map((ticket) => {
+      <TicketItem key={ticket.id} ticket={ticket} />
+    });
+
     return (
         <div>
           <header>
@@ -77,6 +82,9 @@ class App extends Component {
                            inputAttributes={{placeholder:'To'}} />
             </div>
           </header>
+          <div>
+            {ticketList}
+          </div>
         </div>
     )
   }
