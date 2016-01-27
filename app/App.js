@@ -12,8 +12,30 @@ class App extends Component {
     AirportActionCreators.fetchAirports();
   }
 
-  getSuggestions() {
+  /**
+   * Fonction renvoyant un tableau de string formaté pour l'autosuggest.
+   *
+   * @param input
+   * @param callback
+   */
+  getSuggestions(input, callback) {
+    // Nettoie l'user input
+    const escapedInput = input.trim().toLowerCase();
+    const airportMatchRegex = new RegExp('\\b' + escapedInput, 'i');
 
+    const suggestions = this.state.airports
+        // On récupère les aéroports correspondant à l'user input
+        .filter(airport => airportMatchRegex.test(airport.city))
+        // Trie par ordre alphabétique
+        .sort((airport1, airport2) => {
+          return airport1.city.toLowerCase().indexOf(escapedInput) - airport2.city.toLowerCase().indexOf(escapedInput);
+        })
+        // On affiche uniquement es 7 premiers résultats
+        .slice(0, 7)
+        // Et on renvoie de manière formaté les suggestions.
+        .map(airport => `${airport.city} - ${airport.country} (${airport.code}) `);
+
+    callback(null, suggestions);
   }
 
   render() {
@@ -26,9 +48,11 @@ class App extends Component {
             </div>
             <div className="header-route">
               <Autosuggest id='origin'
+                           suggestions={this.getSuggestions.bind(this)}
                            inputAttributes={{placeholder:'From'}} />
 
               <Autosuggest id='destination'
+                           suggestions={this.getSuggestions.bind(this)}
                            inputAttributes={{placeholder:'To'}} />
             </div>
           </header>
