@@ -3,7 +3,10 @@ Flux Banking App
 
 Quickstart project for learning Flux.
 
-This application is VERY simple.
+This repos contain 2 project.
+
+The first is VERY simple.
+The second is simple as well but includes API Call and how to deal with them. 
 
 Comments are in french. 
 
