@@ -62,6 +62,7 @@ class App extends Component {
 }
 
 App.getStores = () => ([AirportStore]);
+// Les props sont passés de cette manière au composant en fonction de l'état du store.
 App.calculateState = (prevState) => ({
   airports: AirportStore.getState()
 });
